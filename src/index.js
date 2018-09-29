@@ -2,21 +2,13 @@ module.exports = function solveSudoku(matrix) {
 
 
   Sudoku = function(in_val) {
-    var solved = [];
+   var solved = [];
     var steps = 0;
 
     initSolved(in_val);
     solve();
 
-
-    /**
-     * Инициализация рабочего массива
-     *
-     * Рабочий массив представляет собой матрицу 9х9, каждый элемент которой
-     * является списком из трех элементов: число, тип элемента (in - заполнен
-     * по услвоию, unknown - решение не найдено, solved - решено) и перечень
-     * предполагаемых значений элемента.
-     */
+   
     function initSolved(in_val) {
         steps = 0;
         var suggest = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -155,7 +147,7 @@ module.exports = function solveSudoku(matrix) {
      */
     function colContent(j) {
         var content = [];
-        for ( var i=0; i<9; i++ ) {
+        for ( let i=0; i<9; i++ ) {
             if ( 'unknown' != solved[i][j][1] ) {
                 content[content.length] = solved[i][j][0];
             }
@@ -170,8 +162,8 @@ module.exports = function solveSudoku(matrix) {
     function sectContent(i, j) {
         var content = [];
         var offset = sectOffset(i, j);
-        for ( var k=0; k<3; k++ ) {
-            for ( var l=0; l<3; l++ ) {
+        for ( let k=0; k<3; k++ ) {
+            for ( let l=0; l<3; l++ ) {
                 if ( 'unknown' != solved[offset.i+k][offset.j+l][1] ) {
                     content[content.length] = solved[offset.i+k][offset.j+l][0];
                 }
@@ -186,7 +178,7 @@ module.exports = function solveSudoku(matrix) {
      */
     function lessRowSuggest(i, j) {
         var less_suggest = solved[i][j][2];
-        for ( var k=0; k<9; k++ ) {
+        for ( let k=0; k<9; k++ ) {
             if ( k == j || 'unknown' != solved[i][k][1] ) {
                 continue;
             }
@@ -201,7 +193,7 @@ module.exports = function solveSudoku(matrix) {
      */
     function lessColSuggest(i, j) {
         var less_suggest = solved[i][j][2];
-        for ( var k=0; k<9; k++ ) {
+        for ( let k=0; k<9; k++ ) {
             if ( k == i || 'unknown' != solved[k][j][1] ) {
                 continue;
             }
@@ -217,8 +209,8 @@ module.exports = function solveSudoku(matrix) {
     function lessSectSuggest(i, j) {
         var less_suggest = solved[i][j][2];
         var offset = sectOffset(i, j);
-        for ( var k=0; k<3; k++ ) {
-            for ( var l=0; l<3; l++ ) {
+        for ( let k=0; k<3; k++ ) {
+            for ( let l=0; l<3; l++ ) {
                 if ( ((offset.i+k) == i  && (offset.j+l) == j)|| 'unknown' != solved[offset.i+k][offset.j+l][1] ) {
                     continue;
                 }
@@ -234,9 +226,9 @@ module.exports = function solveSudoku(matrix) {
      */
     function arrayDiff (ar1, ar2) {
         var arr_diff = [];
-        for ( var i=0; i<ar1.length; i++ ) {
+        for ( let i=0; i<ar1.length; i++ ) {
             var is_found = false;
-            for ( var j=0; j<ar2.length; j++ ) {
+            for ( let j=0; j<ar2.length; j++ ) {
                 if ( ar1[i] == ar2[j] ) {
                     is_found = true;
                     break;
@@ -255,11 +247,11 @@ module.exports = function solveSudoku(matrix) {
      */
     function arrayUnique(ar){
         var sorter = {};
-        for(var i=0,j=ar.length;i<j;i++){
+        for(let i=0,j=ar.length;i<j;i++){
         sorter[ar[i]] = ar[i];
         }
         ar = [];
-        for(var i in sorter){
+        for(let i in sorter){
         ar.push(i);
         }
         return ar;
@@ -276,10 +268,23 @@ module.exports = function solveSudoku(matrix) {
         };
     }; // end of method sectOffset()
 
+    this.EndRes = function() {
 
+        var html = '';
+        for ( var i=0; i<9; i++) {
+           
+            for ( var j=0; j<9; j++ ) {
+                
+                html += solved[i][j][1];
+            }
+            
+        }
+        return html;
+    }
     /**
      * Вывод найденного решения
      */
+    
     this.html = function() {
         var html = '<table>';
         for ( var i=0; i<9; i++) {
@@ -306,8 +311,8 @@ module.exports = function solveSudoku(matrix) {
      */
     function isSolved() {
         var is_solved = true;
-        for ( var i=0; i<9; i++) {
-            for ( var j=0; j<9; j++ ) {
+        for ( let i=0; i<9; i++) {
+            for ( let j=0; j<9; j++ ) {
                 if ( 'unknown' == solved[i][j][1] ) {
                     is_solved = false;
                 }
@@ -333,8 +338,8 @@ module.exports = function solveSudoku(matrix) {
      */
     function isFailed() {
         var is_failed = false;
-        for ( var i=0; i<9; i++) {
-            for ( var j=0; j<9; j++ ) {
+        for ( let i=0; i<9; i++) {
+            for ( let j=0; j<9; j++ ) {
                 if ( 'unknown' == solved[i][j][1] && !solved[i][j][2].length ) {
                     is_failed = true;
                 }
@@ -353,14 +358,14 @@ module.exports = function solveSudoku(matrix) {
 
 
     /**
-     * Мпетод поиска с возвратом
+     * Метод поиска с возвратом
      */
     function backtracking() {
         backtracking_call++;
         // Формируем новый массив
-        var in_val = [[], [], [], [], [], [], [], [], []];
-        var i_min=-1, j_min=-1, suggests_cnt=0;
-        for ( var i=0; i<9; i++ ) {
+        let in_val = [[], [], [], [], [], [], [], [], []];
+        let i_min=-1, j_min=-1, suggests_cnt=0;
+        for ( let i=0; i<9; i++ ) {
             in_val[i].length = 9;
             for ( var j=0; j<9; j++ ) {
                 in_val[i][j] = solved[i][j][0];
@@ -377,13 +382,13 @@ module.exports = function solveSudoku(matrix) {
         for ( var k=0; k<suggests_cnt; k++ ) {
             in_val[i_min][j_min] = solved[i_min][j_min][2][k];
             // инициируем новый цикл
-            var sudoku = new Sudoku(in_val);
+            let sudoku = new Sudoku(in_val);
             if ( sudoku.isSolved() ) {
                 // нашли решение
                 out_val = sudoku.solved();
                 // Записываем найденное решение
-                for ( var i=0; i<9; i++ ) {
-                    for ( var j=0; j<9; j++ ) {
+                for ( let i=0; i<9; i++ ) {
+                    for ( let j=0; j<9; j++ ) {
                         if ( 'unknown' == solved[i][j][1] ) {
                             markSolved(i, j, out_val[i][j][0])
                         }
@@ -392,18 +397,37 @@ module.exports = function solveSudoku(matrix) {
                 return;
             }
         }
-    }; // end of function backtracking)(
+    }; 
 
 
-    /**
+    /*
      * Возвращает найденное решение
      */
     this.solved = function() {
         return solved;
-    }; // end of solved()
+    }; 
 };
 
-var backtracking_call = 0;
-var sudoku = new Sudoku(matrix);
-return sudoku.solved;
+let backtracking_call = 0;
+let sudoku = new Sudoku(matrix);
+
+
+answerSud = [[],[],[],[],[],[],[],[],[]];
+var answerOur = sudoku.solved();
+
+
+for ( let i=0; i<9; i++) {
+    
+    
+    for ( let j=0; j<9; j++ ) {
+        
+        
+        answerSud[i][j] = answerOur[i][j][0];
+       
+        
+    }
+}
+
+
+return answerSud;
 }
