@@ -2,8 +2,8 @@ module.exports = function solveSudoku(matrix) {
 
 
   Sudoku = function(in_val) {
-   var solved = [];
-    var steps = 0;
+   let solved = [];
+    let steps = 0;
 
     initSolved(in_val);
     solve();
@@ -11,10 +11,10 @@ module.exports = function solveSudoku(matrix) {
    
     function initSolved(in_val) {
         steps = 0;
-        var suggest = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        for ( var i=0; i<9; i++) {
+        let suggest = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        for ( let i=0; i<9; i++) {
             solved[i] = [];
-            for ( var j=0; j<9; j++ ) {
+            for ( let j=0; j<9; j++ ) {
                 if ( in_val[i][j] ) {
                     solved[i][j] = [in_val[i][j], 'in', []];
                 }
@@ -23,7 +23,7 @@ module.exports = function solveSudoku(matrix) {
                 }
             }
         }
-    }; // end of method initSolved()
+    }; 
 
 
     /**
@@ -33,7 +33,7 @@ module.exports = function solveSudoku(matrix) {
      * ни одного элемента, то решение прекращается.
      */
     function solve() {
-        var changed = 0;
+        let changed = 0;
         do {
             // сужаем множество значений для всех нерешенных чисел
             changed = updateSuggests();
@@ -48,7 +48,7 @@ module.exports = function solveSudoku(matrix) {
             // используем поиск с возвратом
             backtracking();
         }
-    }; // end of method solve()
+    }; 
 
 
     /**
@@ -57,12 +57,12 @@ module.exports = function solveSudoku(matrix) {
      * Проверяем основные правила -- уникальность в строке, столбце и секции.
      */
     function updateSuggests() {
-        var changed = 0;
-        var buf = arrayDiff(solved[1][3][2], rowContent(1));
+        let changed = 0;
+        let buf = arrayDiff(solved[1][3][2], rowContent(1));
         buf = arrayDiff(buf, colContent(3));
         buf = arrayDiff(buf, sectContent(1, 3));
-        for ( var i=0; i<9; i++) {
-            for ( var j=0; j<9; j++) {
+        for ( let i=0; i<9; i++) {
+            for ( let j=0; j<9; j++) {
                 if ( 'unknown' != solved[i][j][1] ) {
                     // Здесь решение либо найдено, либо задано
                     continue;
@@ -76,7 +76,7 @@ module.exports = function solveSudoku(matrix) {
             }
         }
         return changed;
-    }; // end of methos updateSuggests()
+    }; 
 
 
     /**
@@ -92,31 +92,31 @@ module.exports = function solveSudoku(matrix) {
             return 1;
         }
         return 0;
-    }; // end of method solveSingle()
+    }; 
 
 
     /**
      * Метод "Скрытый одиночка"
      */
     function solveHiddenSingle(i, j) {
-        var less_suggest = lessRowSuggest(i, j);
-        var changed = 0;
+        let less_suggest = lessRowSuggest(i, j);
+        let changed = 0;
         if ( 1 == less_suggest.length ) {
             markSolved(i, j, less_suggest[0]);
             changed++;
         }
-        var less_suggest = lessColSuggest(i, j);
+         less_suggest = lessColSuggest(i, j);
         if ( 1 == less_suggest.length ) {
             markSolved(i, j, less_suggest[0]);
             changed++;
         }
-        var less_suggest = lessSectSuggest(i, j);
+        less_suggest = lessSectSuggest(i, j);
         if ( 1 == less_suggest.length ) {
             markSolved(i, j, less_suggest[0]);
             changed++;
         }
         return changed;
-    }; // end of method solveHiddenSingle()
+    }; 
     
     
     /**
@@ -125,43 +125,43 @@ module.exports = function solveSudoku(matrix) {
     function markSolved(i, j, solve) {
         solved[i][j][0] = solve;
         solved[i][j][1] = 'solved';
-    }; // end of method markSolved()
+    }; 
 
 
     /**
      * Содержимое строки
      */
     function rowContent(i) {
-        var content = [];
-        for ( var j=0; j<9; j++ ) {
+        let content = [];
+        for ( let j=0; j<9; j++ ) {
             if ( 'unknown' != solved[i][j][1] ) {
                 content[content.length] = solved[i][j][0];
             }
         }
         return content;
-    }; // end of method rowContent()
+    }; 
 
 
     /**
      * Содержимое столбца
      */
     function colContent(j) {
-        var content = [];
+        let content = [];
         for ( let i=0; i<9; i++ ) {
             if ( 'unknown' != solved[i][j][1] ) {
                 content[content.length] = solved[i][j][0];
             }
         }
         return content;
-    }; // end of method colContent()
+    }; 
 
 
     /**
      * Содержимое секции
      */
     function sectContent(i, j) {
-        var content = [];
-        var offset = sectOffset(i, j);
+        let content = [];
+        let offset = sectOffset(i, j);
         for ( let k=0; k<3; k++ ) {
             for ( let l=0; l<3; l++ ) {
                 if ( 'unknown' != solved[offset.i+k][offset.j+l][1] ) {
@@ -170,14 +170,14 @@ module.exports = function solveSudoku(matrix) {
             }
         }
         return content;
-    }; // end of method sectContent()
+    }; 
 
 
     /**
      * Минимизированное множество предположений по строке
      */
     function lessRowSuggest(i, j) {
-        var less_suggest = solved[i][j][2];
+        let less_suggest = solved[i][j][2];
         for ( let k=0; k<9; k++ ) {
             if ( k == j || 'unknown' != solved[i][k][1] ) {
                 continue;
@@ -185,14 +185,14 @@ module.exports = function solveSudoku(matrix) {
             less_suggest = arrayDiff(less_suggest, solved[i][k][2]);
         }
         return less_suggest;
-    }; // end of method lessRowSuggest()
+    }; 
 
 
     /**
      * Минимизированное множество предположений по столбцу
      */
     function lessColSuggest(i, j) {
-        var less_suggest = solved[i][j][2];
+        let less_suggest = solved[i][j][2];
         for ( let k=0; k<9; k++ ) {
             if ( k == i || 'unknown' != solved[k][j][1] ) {
                 continue;
@@ -200,15 +200,15 @@ module.exports = function solveSudoku(matrix) {
             less_suggest = arrayDiff(less_suggest, solved[k][j][2]);
         }
         return less_suggest;
-    }; // end of method lessColSuggest()
+    }; 
 
 
     /**
      * Минимизированное множество предположений по секции
      */
     function lessSectSuggest(i, j) {
-        var less_suggest = solved[i][j][2];
-        var offset = sectOffset(i, j);
+        let less_suggest = solved[i][j][2];
+        let offset = sectOffset(i, j);
         for ( let k=0; k<3; k++ ) {
             for ( let l=0; l<3; l++ ) {
                 if ( ((offset.i+k) == i  && (offset.j+l) == j)|| 'unknown' != solved[offset.i+k][offset.j+l][1] ) {
@@ -218,14 +218,14 @@ module.exports = function solveSudoku(matrix) {
             }
         }
         return less_suggest;
-    }; // end of method lessSectSuggest()
+    }; 
 
 
     /**
      * Вычисление разницы между двумя массивами
      */
     function arrayDiff (ar1, ar2) {
-        var arr_diff = [];
+        let arr_diff = [];
         for ( let i=0; i<ar1.length; i++ ) {
             var is_found = false;
             for ( let j=0; j<ar2.length; j++ ) {
@@ -239,14 +239,14 @@ module.exports = function solveSudoku(matrix) {
             }
         }
         return arr_diff;
-    }; // end of method arrayDiff()
+    }; 
 
 
     /**
      * Уникальные значения массива
      */
     function arrayUnique(ar){
-        var sorter = {};
+        let sorter = {};
         for(let i=0,j=ar.length;i<j;i++){
         sorter[ar[i]] = ar[i];
         }
@@ -255,8 +255,7 @@ module.exports = function solveSudoku(matrix) {
         ar.push(i);
         }
         return ar;
-    }; // end of method arrayUnique()
-
+    }; 
     
     /**
      * Расчет смещения секции
@@ -268,49 +267,11 @@ module.exports = function solveSudoku(matrix) {
         };
     }; // end of method sectOffset()
 
-    this.EndRes = function() {
-
-        var html = '';
-        for ( var i=0; i<9; i++) {
-           
-            for ( var j=0; j<9; j++ ) {
-                
-                html += solved[i][j][1];
-            }
-            
-        }
-        return html;
-    }
-    /**
-     * Вывод найденного решения
-     */
-    
-    this.html = function() {
-        var html = '<table>';
-        for ( var i=0; i<9; i++) {
-            if ( 2 == i || 5 == i ) {
-                html += '<tr class="bb">';
-            }
-            else {
-                html += '<tr>';
-            }
-            for ( var j=0; j<9; j++ ) {
-                
-                html += '<td class="'+((2 == j || 5 == j) ? 'rb ' : '')+solved[i][j][1]+'"'+( 'unknown' == solved[i][j][1] ? ' title="'+solved[i][j][2].join(', ')+'"' : '' )+'>'+(solved[i][j][0] ? solved[i][j][0] : '&nbsp;')+'</td>';
-            }
-            html += '</tr>';
-        }
-        html += '</table>';
-        html += '<p>Решено за '+steps+' шагов</p>';
-        return html;
-    }; // end of method html()
-
-
     /**
      * Проверка на найденное решение
      */
     function isSolved() {
-        var is_solved = true;
+        let is_solved = true;
         for ( let i=0; i<9; i++) {
             for ( let j=0; j<9; j++ ) {
                 if ( 'unknown' == solved[i][j][1] ) {
@@ -319,7 +280,7 @@ module.exports = function solveSudoku(matrix) {
             }
         }
         return is_solved;
-    }; // end of method isSolved()
+    }; 
 
 
     /**
@@ -327,7 +288,7 @@ module.exports = function solveSudoku(matrix) {
      */
     this.isSolved = function() {
         return isSolved();
-    }; // end of public method isSolved()
+    }; 
 
 
     /**
@@ -337,7 +298,7 @@ module.exports = function solveSudoku(matrix) {
      * отсутствуют кандидаты
      */
     function isFailed() {
-        var is_failed = false;
+        let is_failed = false;
         for ( let i=0; i<9; i++) {
             for ( let j=0; j<9; j++ ) {
                 if ( 'unknown' == solved[i][j][1] && !solved[i][j][2].length ) {
@@ -346,7 +307,7 @@ module.exports = function solveSudoku(matrix) {
             }
         }
         return is_failed;
-    }; // end of method isFailed()
+    }; 
 
 
     /**
@@ -354,12 +315,13 @@ module.exports = function solveSudoku(matrix) {
      */
     this.isFailed = function() {
         return isFailed();
-    }; // end of public method isFailed()
+    }; 
 
 
     /**
      * Метод поиска с возвратом
      */
+    
     function backtracking() {
         backtracking_call++;
         // Формируем новый массив
@@ -410,24 +372,16 @@ module.exports = function solveSudoku(matrix) {
 
 let backtracking_call = 0;
 let sudoku = new Sudoku(matrix);
-
-
+let answerOur = sudoku.solved();
 answerSud = [[],[],[],[],[],[],[],[],[]];
-var answerOur = sudoku.solved();
 
 
 for ( let i=0; i<9; i++) {
-    
-    
     for ( let j=0; j<9; j++ ) {
-        
-        
         answerSud[i][j] = answerOur[i][j][0];
        
         
+        }
     }
-}
-
-
 return answerSud;
 }
